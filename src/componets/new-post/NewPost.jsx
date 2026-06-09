@@ -1,20 +1,60 @@
 import classes from './NewPost.module.css';
 
-function NewPost() {
-    function changeBodyHandler(event) {
-        console.log(event.target.value);
-    }
+
+function NewPost(props) {
+
     return (
-        <form className={classes.form}>
-            <p>
-                <label>Text</label>
-                <textarea rows="3" onChange={changeBodyHandler }></textarea>
-                {/* <textarea rows="3" onChange={(e) => { changeBodyHandler(e); }}></textarea> */}
-            </p>
-            <p>
-                <label>Your name</label>
-                <input type="text"/>
-            </p>
+        <form className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm max-w-xl mx-auto">
+            <div className="flex gap-3">
+
+                {/* Avatar */}
+                <div className="w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold shrink-0">
+                    {props.postAuthor?.charAt(0)?.toUpperCase() || "?"}
+                </div>
+
+                <div className="flex-1 space-y-4">
+
+                    {/* Tweet Content */}
+                    <div>
+                        <textarea
+                            rows="3"
+                            placeholder="What's happening?"
+                            onChange={props.onPostBodyChange}
+                            className="w-full resize-none border-none outline-none text-lg placeholder-gray-500 focus:ring-0"
+                        />
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t border-gray-100 pt-4">
+
+                        {/* Author Input */}
+                        <input
+                            type="text"
+                            placeholder="Your name"
+                            onChange={props.onPostAuthorChange}
+                            className="w-full rounded-xl border border-gray-200 px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none transition"
+                        />
+
+                        {/* Actions + Post Button */}
+                        <div className="flex items-center justify-between mt-4">
+                            <div className="flex gap-4 text-sky-500 text-xl">
+                                <button type="button">🖼️</button>
+                                <button type="button">😊</button>
+                                <button type="button">📍</button>
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="bg-sky-500 hover:bg-sky-600 text-white font-semibold px-5 py-2 rounded-full transition"
+                            >
+                                Post
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         </form>
     );
 }
