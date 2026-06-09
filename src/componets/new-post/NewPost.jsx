@@ -1,15 +1,35 @@
 import classes from './NewPost.module.css';
+import { useState } from 'react';
 
 
-function NewPost(props) {
+function NewPost({onCancel, onAddPostFunc}) {
+
+    const [postBody, setPostBody] = useState("");
+    const [postAuthor, setPostAuthor] = useState("");
+    function changePostAuthorHandler(event) {
+        setPostAuthor(event.target.value);
+    }
+
+    function changePostBodyHandler(event) {
+        setPostBody(event.target.value);
+    }
+    function submitHandler(event) {
+        event.preventDefault();
+        const postData = {
+            body: postBody,
+            author: postAuthor
+        }
+        onAddPostFunc(postData);
+        onCancel();
+    }
 
     return (
-        <form className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm max-w-xl mx-auto">
+        <form 
+        onSubmit={submitHandler}
+        className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm max-w-xl mx-auto">
             <div className="flex gap-3">
-
-                {/* Avatar */}
                 <div className="w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold shrink-0">
-                    {props.postAuthor?.charAt(0)?.toUpperCase() || "?"}
+                    ?
                 </div>
 
                 <div className="flex-1 space-y-4">
@@ -19,7 +39,7 @@ function NewPost(props) {
                         <textarea
                             rows="3"
                             placeholder="What's happening?"
-                            onChange={props.onPostBodyChange}
+                            onChange={changePostBodyHandler}
                             className="w-full resize-none border-none outline-none text-lg placeholder-gray-500 focus:ring-0"
                         />
                     </div>
@@ -31,7 +51,7 @@ function NewPost(props) {
                         <input
                             type="text"
                             placeholder="Your name"
-                            onChange={props.onPostAuthorChange}
+                            onChange={changePostAuthorHandler}
                             className="w-full rounded-xl border border-gray-200 px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none transition"
                         />
 
@@ -43,12 +63,20 @@ function NewPost(props) {
                                 <button type="button">📍</button>
                             </div>
 
+                            <div>
+                                <button
+                                onClick={ onCancel }                            
+                                className="bg-gray-300 text-black font-semibold px-5 py-2 rounded-full mr-3"
+                            >
+                                Cancel
+                            </button>
                             <button
-                                type="submit"
+                                type="submit"                                
                                 className="bg-sky-500 hover:bg-sky-600 text-white font-semibold px-5 py-2 rounded-full transition"
                             >
                                 Post
                             </button>
+                            </div>
                         </div>
 
                     </div>

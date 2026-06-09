@@ -5,34 +5,47 @@ import Post from '../post-card/Post';
 import classes from './PostList.module.css'
 import Modal from '../modal/Modal';
 function PostList({modalIsVisibleProp, onCloseModalFunc}) {
-    const [postBody, setPostBody] = useState("");
-    const [postAuthor, setPostAuthor] = useState("");
+    const [posts, setPosts] = useState([]);
 
-
-    function changePostAuthorHandler(event) {
-        setPostAuthor(event.target.value);
+    function addPostHandler(postData) {
+        const response = fetch(
+        "https://starpi-api-production.up.railway.app/api/posts",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+            data: {
+                title: "Title yet to be configure",
+                content: postData.body,
+                author: postData.author
+            }
+            })
+        }
+        );
+        setPosts((existingPosts)=> [postData, ...existingPosts]);
     }
-
-    function changePostBodyHandler(event) {
-        setPostBody(event.target.value);
-    }
-
     return (
         <>
-            
             {modalIsVisibleProp && 
                 <Modal onCloseModalFunc={onCloseModalFunc}>
                     <NewPost 
-                    onPostBodyChange={changePostBodyHandler}
-                    onPostAuthorChange={changePostAuthorHandler} />
+                    onAddPostFunc={addPostHandler}
+                    onCancel={onCloseModalFunc}/>
                 </Modal> 
             }   
-            <ul className={classes.posts}>
-                <li><Post postAuthor={postAuthor} postContent={postBody} /></li>
-                <li><Post postAuthor="Husen" postContent="Post Content by Husen" /></li>
-                <li><Post postAuthor="Fatema" postContent="Post Content by Fatema" /></li>
-                <li><Post postAuthor="Zehara" postContent="Post Content by Zehara" /></li>
-            </ul>
+            {posts.length > 0 && (
+                <ul className={classes.posts}>
+                    { posts.map((post)=> <li key={post.body}><Post postAuthor={post.author} postContent={post.body}></Post></li>)}
+                </ul>
+            )}
+            {posts.length === 0 && (
+                <div>
+                    <h2>There are no tweets</h2>
+                    <p>Start adding some</p>
+                </div>
+            )}
         </>
     );
 }
