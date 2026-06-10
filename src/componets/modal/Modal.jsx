@@ -1,14 +1,19 @@
 import classes from './Modal.module.css';
+import { useNavigate } from 'react-router-dom';
+function Modal({children}) {
+    const navigate = useNavigate();
+    function modalCloseHandler() {
+        navigate('..');
+    }
 
-function Modal({children, onCloseModalFunc}) {
     return (
         <>
             <div 
-            onClick={onCloseModalFunc}
+            onClick={modalCloseHandler}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" />
 
             <div 
-            onClick={onCloseModalFunc}
+            onClick={modalCloseHandler}
             className="fixed inset-0 z-50 flex items-center justify-center p-4">
                 <div 
                 onClick={(e) => e.stopPropagation()}
@@ -17,19 +22,13 @@ function Modal({children, onCloseModalFunc}) {
                     <div                     
                     className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
                         <button
-                            onClick={onCloseModalFunc}
+                            onClick={modalCloseHandler}
                             type="button"
                             className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center transition"
                         >
                             ✕
                         </button>
 
-                        <button
-                            type="submit"
-                            className="bg-sky-500 hover:bg-sky-600 text-white font-semibold px-5 py-2 rounded-full transition"
-                        >
-                            Post
-                        </button>
                     </div>
 
                     {/* Content */}

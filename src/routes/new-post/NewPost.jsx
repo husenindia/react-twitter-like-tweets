@@ -1,31 +1,11 @@
 import classes from './NewPost.module.css';
-import { useState } from 'react';
-
-
-function NewPost({onCancel, onAddPostFunc}) {
-
-    const [postBody, setPostBody] = useState("");
-    const [postAuthor, setPostAuthor] = useState("");
-    function changePostAuthorHandler(event) {
-        setPostAuthor(event.target.value);
-    }
-
-    function changePostBodyHandler(event) {
-        setPostBody(event.target.value);
-    }
-    function submitHandler(event) {
-        event.preventDefault();
-        const postData = {
-            body: postBody,
-            author: postAuthor
-        }
-        onAddPostFunc(postData);
-        onCancel();
-    }
-
+import Modal from '../../componets/modal/Modal';
+import { Link, Form, redirect } from 'react-router-dom';
+function NewPost({onAddPostFunc}) {
     return (
-        <form 
-        onSubmit={submitHandler}
+        <Modal>
+        <Form      
+        method='post'  
         className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm max-w-xl mx-auto">
             <div className="flex gap-3">
                 <div className="w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold shrink-0">
@@ -37,9 +17,9 @@ function NewPost({onCancel, onAddPostFunc}) {
                     {/* Tweet Content */}
                     <div>
                         <textarea
+                            name="content"
                             rows="3"
                             placeholder="What's happening?"
-                            onChange={changePostBodyHandler}
                             className="w-full resize-none border-none outline-none text-lg placeholder-gray-500 focus:ring-0"
                         />
                     </div>
@@ -50,8 +30,8 @@ function NewPost({onCancel, onAddPostFunc}) {
                         {/* Author Input */}
                         <input
                             type="text"
+                            name="author"
                             placeholder="Your name"
-                            onChange={changePostAuthorHandler}
                             className="w-full rounded-xl border border-gray-200 px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none transition"
                         />
 
@@ -64,14 +44,14 @@ function NewPost({onCancel, onAddPostFunc}) {
                             </div>
 
                             <div>
-                                <button
-                                onClick={ onCancel }                            
+                                <Link
+                                to=".."
                                 className="bg-gray-300 text-black font-semibold px-5 py-2 rounded-full mr-3"
                             >
                                 Cancel
-                            </button>
+                            </Link>
                             <button
-                                type="submit"                                
+                                type="submit"                                                                
                                 className="bg-sky-500 hover:bg-sky-600 text-white font-semibold px-5 py-2 rounded-full transition"
                             >
                                 Post
@@ -83,7 +63,30 @@ function NewPost({onCancel, onAddPostFunc}) {
                 </div>
 
             </div>
-        </form>
+        </Form>
+        </Modal>
     );
 }
 export default NewPost;
+
+export async function action({request}) {
+    const formData = await request.formData();
+    const postData = Object.fromEntries(formData);
+    console.log(postData);
+    const response = await fetch(
+    "https://starpi-api-production.up.railway.app/api/posts",
+        {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            data: {
+                title: "Title yet to be configure",
+                content: postData.content,
+                author: postData.author
+            }
+        })
+    });
+    return redirect('/');
+}

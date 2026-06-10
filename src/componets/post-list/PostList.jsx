@@ -1,43 +1,16 @@
 
-import { useState } from 'react';
-import NewPost from '../new-post/NewPost';
 import Post from '../post-card/Post';
 import classes from './PostList.module.css'
-import Modal from '../modal/Modal';
-function PostList({modalIsVisibleProp, onCloseModalFunc}) {
-    const [posts, setPosts] = useState([]);
-
-    function addPostHandler(postData) {
-        const response = fetch(
-        "https://starpi-api-production.up.railway.app/api/posts",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-            data: {
-                title: "Title yet to be configure",
-                content: postData.body,
-                author: postData.author
-            }
-            })
-        }
-        );
-        setPosts((existingPosts)=> [postData, ...existingPosts]);
-    }
+import { useLoaderData } from 'react-router-dom';
+function PostList() {
+    const posts = useLoaderData();
+    
     return (
         <>
-            {modalIsVisibleProp && 
-                <Modal onCloseModalFunc={onCloseModalFunc}>
-                    <NewPost 
-                    onAddPostFunc={addPostHandler}
-                    onCancel={onCloseModalFunc}/>
-                </Modal> 
-            }   
+            
             {posts.length > 0 && (
                 <ul className={classes.posts}>
-                    { posts.map((post)=> <li key={post.body}><Post postAuthor={post.author} postContent={post.body}></Post></li>)}
+                    { posts.map((post)=> <li key={post.documentId}><Post id={post.documentId} postAuthor={post.author} postContent={post.content}></Post></li>)}
                 </ul>
             )}
             {posts.length === 0 && (
@@ -46,6 +19,16 @@ function PostList({modalIsVisibleProp, onCloseModalFunc}) {
                     <p>Start adding some</p>
                 </div>
             )}
+
+            {/* {isLoading &&
+                <div className="fixed inset-0 flex items-center justify-center bg-white">
+                    <div className="flex gap-2">
+                    <div className="h-3 w-3 rounded-full bg-blue-500 animate-bounce"></div>
+                    <div className="h-3 w-3 rounded-full bg-blue-500 animate-bounce [animation-delay:150ms]"></div>
+                    <div className="h-3 w-3 rounded-full bg-blue-500 animate-bounce [animation-delay:300ms]"></div>
+                    </div>
+                </div>
+            } */}
         </>
     );
 }
