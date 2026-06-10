@@ -25,7 +25,7 @@ function Post({ id, postAuthor, postContent }) {
                             </div>
                         </div>
 
-                        <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">
+                        <p className="text-gray-800 whitespace-pre-wrap leading-relaxed text-left">
                             {postContent}
                         </p>
 

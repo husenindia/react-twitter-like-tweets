@@ -5,11 +5,7 @@ import classes from './MainHeader.module.css';
 function MainHeader({ onCreatePost }) {
   return (
     <header className={classes.header}>
-      <h1 className={classes.logo}>
-        <MdMessage />
-        React Poster
-      </h1>
-      <p>
+      <p className="flex justify-end w-full">
         <Link 
         to="/create-post"
         className={classes.button}>
